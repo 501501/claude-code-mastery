@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>카운터 앱</title>
+    <!-- Tailwind CSS를 CDN에서 불러옵니다 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+    <!-- 전체 페이지를 중앙에 배치하는 컨테이너 -->
+    <div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
+
+        <!-- 카운터 앱의 메인 박스 -->
+        <div class="bg-white rounded-lg shadow-2xl p-8 w-full max-w-md">
+
+            <!-- 제목 -->
+            <h1 class="text-3xl font-bold text-center text-gray-800 mb-8">
+                카운터 앱
+            </h1>
+
+            <!-- 현재 카운트를 표시하는 영역 -->
+            <div class="bg-gradient-to-r from-blue-100 to-indigo-100 rounded-lg p-8 mb-8 text-center">
+                <p class="text-gray-600 text-lg mb-2">현재 개수</p>
+                <!-- JavaScript에서 이 요소의 텍스트를 변경합니다 -->
+                <p id="counter-display" class="text-6xl font-bold text-blue-600">
+                    0
+                </p>
+            </div>
+
+            <!-- 버튼들을 배치하는 영역 -->
+            <div class="flex gap-4 mb-6">
+                <!-- 감소 버튼 -->
+                <button
+                    id="decrease-btn"
+                    class="flex-1 bg-blue-400 hover:bg-blue-500 text-white font-bold py-3 px-6 rounded-lg transition duration-200 transform hover:scale-105"
+                >
+                    -1
+                </button>
+
+                <!-- 증가 버튼 -->
+                <button
+                    id="increase-btn"
+                    class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition duration-200 transform hover:scale-105"
+                >
+                    +1
+                </button>
+            </div>
+
+            <!-- 리셋 버튼 -->
+            <button
+                id="reset-btn"
+                class="w-full bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-3 px-6 rounded-lg transition duration-200 transform hover:scale-105"
+            >
+                리셋
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // 카운터의 현재 값을 저장하는 변수
+        let count = 0;
+
+        // HTML에서 필요한 요소들을 찾아서 저장합니다
+        const counterDisplay = document.getElementById('counter-display');
+        const increaseBtn = document.getElementById('increase-btn');
+        const decreaseBtn = document.getElementById('decrease-btn');
+        const resetBtn = document.getElementById('reset-btn');
+
+        // 화면에 현재 카운트를 표시하는 함수
+        // 이 함수는 count 값이 변할 때마다 호출됩니다
+        function updateDisplay() {
+            counterDisplay.textContent = count;
+        }
+
+        // 증가 버튼을 클릭했을 때 실행되는 함수
+        // 클릭하면 count에 1을 더합니다
+        increaseBtn.addEventListener('click', function() {
+            count++;  // count를 1 증가시킵니다
+            updateDisplay();  // 화면을 업데이트합니다
+        });
+
+        // 감소 버튼을 클릭했을 때 실행되는 함수
+        // 클릭하면 count에서 1을 뺍니다
+        decreaseBtn.addEventListener('click', function() {
+            count--;  // count를 1 감소시킵니다
+            updateDisplay();  // 화면을 업데이트합니다
+        });
+
+        // 리셋 버튼을 클릭했을 때 실행되는 함수
+        // 클릭하면 count를 0으로 돌립니다
+        resetBtn.addEventListener('click', function() {
+            count = 0;  // count를 0으로 초기화합니다
+            updateDisplay();  // 화면을 업데이트합니다
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,301 @@
+/* 커스텀 스타일 (Tailwind CSS 보완용) */
+
+/* 배경 그라데이션 */
+body {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+}
+
+/* 필터 버튼 활성화 스타일 */
+.filter-btn {
+    background-color: #f3f4f6;
+    color: #6b7280;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.filter-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.5s;
+}
+
+.filter-btn:hover {
+    background-color: #e5e7eb;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.filter-btn:hover::before {
+    left: 100%;
+}
+
+.filter-btn.active {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+/* 버킷 리스트 항목 애니메이션 및 카드 스타일 */
+.bucket-item {
+    animation: slideIn 0.3s ease-out;
+    background: linear-gradient(135deg, #ffffff 0%, #f9fafb 100%);
+    border: 1px solid #e5e7eb;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.bucket-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.1), transparent);
+    transition: left 0.6s;
+}
+
+.bucket-item:hover {
+    box-shadow: 0 12px 24px rgba(102, 126, 234, 0.25), 0 4px 8px rgba(0, 0, 0, 0.08);
+    transform: translateY(-4px);
+    border-color: #667eea;
+}
+
+.bucket-item:hover::before {
+    left: 100%;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 완료된 항목 스타일 */
+.bucket-item .line-through {
+    text-decoration: line-through;
+    opacity: 0.6;
+}
+
+/* 체크박스 호버 효과 */
+.bucket-item button:first-child:hover {
+    transform: scale(1.1);
+}
+
+/* 스크롤바 스타일 (Chrome, Safari) */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* 모바일 반응형 */
+@media (max-width: 640px) {
+    body {
+        padding-bottom: 20px;
+    }
+
+    .bucket-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .bucket-item > div:last-child {
+        width: 100%;
+        justify-content: flex-end;
+        margin-top: 12px;
+    }
+
+    .filter-btn {
+        font-size: 0.875rem;
+        padding: 0.625rem 1.25rem;
+    }
+
+    h1 {
+        font-size: 2.25rem;
+    }
+
+    .bg-white {
+        padding: 1.5rem;
+    }
+}
+
+/* 입력 필드 스타일 강화 */
+input {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+input:focus {
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+    transform: translateY(-2px);
+    border-color: #667eea;
+}
+
+/* 버튼 클릭 효과 및 호버 */
+button:active {
+    transform: scale(0.98);
+}
+
+/* 주요 버튼 스타일 */
+.bg-blue-600 {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.bg-blue-600::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.2);
+    transition: left 0.5s;
+}
+
+.bg-blue-600:hover {
+    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+    transform: translateY(-2px);
+}
+
+.bg-blue-600:hover::before {
+    left: 100%;
+}
+
+/* 빈 상태 메시지 애니메이션 */
+#emptyState {
+    animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* 모달 백드롭 애니메이션 및 스타일 */
+#editModal {
+    animation: fadeIn 0.2s ease-in;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+}
+
+#editModal > div {
+    animation: scaleIn 0.2s ease-out;
+    background: linear-gradient(135deg, #ffffff 0%, #f9fafb 100%);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+}
+
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95) rotateX(-10deg);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) rotateX(0);
+    }
+}
+
+/* 통계 숫자 애니메이션 */
+#totalCount, #completedCount, #progressCount, #completionRate {
+    transition: all 0.3s ease;
+    display: inline-block;
+}
+
+/* 수정/삭제 버튼 스타일 강화 */
+.bg-blue-100, .bg-red-100 {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.bg-blue-100:hover {
+    background-color: #3b82f6;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.bg-red-100:hover {
+    background-color: #ef4444;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+}
+
+/* 모달의 저장 버튼 */
+#editForm button[type="submit"] {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+#editForm button[type="submit"]:hover {
+    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+    transform: translateY(-2px);
+}
+
+/* 다크 모드 지원 */
+@media (prefers-color-scheme: dark) {
+    body {
+        background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+    }
+
+    .bg-white {
+        background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
+        border-color: #4a5568;
+    }
+
+    .text-gray-800 {
+        color: #f7fafc;
+    }
+
+    .text-gray-600 {
+        color: #cbd5e0;
+    }
+
+    .text-gray-400 {
+        color: #a0aec0;
+    }
+
+    .border-gray-300 {
+        border-color: #4a5568;
+    }
+
+    .bucket-item {
+        background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
+        border-color: #4a5568;
+    }
+
+    .bucket-item:hover {
+        border-color: #667eea;
+        box-shadow: 0 12px 24px rgba(102, 126, 234, 0.15), 0 4px 8px rgba(0, 0, 0, 0.3);
+    }
+}

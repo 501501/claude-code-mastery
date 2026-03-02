@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>스톱워치 앱</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+    <div class="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 flex items-center justify-center p-4">
+        <div class="bg-slate-800 rounded-2xl shadow-2xl p-8 w-full max-w-md border border-slate-700">
+            <h1 class="text-3xl font-bold text-center text-white mb-8">⏱️ 스톱워치</h1>
+
+            <!-- 시간 표시 영역 -->
+            <div class="bg-gradient-to-b from-slate-700 to-slate-800 rounded-xl p-8 mb-8 text-center border border-slate-600">
+                <div id="time-display" class="text-6xl font-mono font-bold text-cyan-400 tracking-wider">
+                    00:00:00
+                </div>
+            </div>
+
+            <!-- 버튼 영역 -->
+            <div class="flex gap-4 mb-4">
+                <!-- 시작/일시정지 버튼 -->
+                <button
+                    id="toggle-btn"
+                    class="flex-1 bg-cyan-500 hover:bg-cyan-600 text-white font-bold py-3 px-6 rounded-lg transition duration-200 transform hover:scale-105 active:scale-95"
+                >
+                    시작
+                </button>
+
+                <!-- 리셋 버튼 -->
+                <button
+                    id="reset-btn"
+                    class="flex-1 bg-slate-600 hover:bg-slate-700 text-white font-bold py-3 px-6 rounded-lg transition duration-200 transform hover:scale-105 active:scale-95"
+                >
+                    리셋
+                </button>
+            </div>
+
+            <!-- 상태 표시 -->
+            <div id="status-text" class="text-center text-slate-400 text-sm">
+                준비 완료
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 상태 관리 변수
+        let isRunning = false;           // 실행 중인지 여부
+        let elapsedTime = 0;             // 경과 시간 (밀리초)
+        let startTime = 0;               // 시작 시간
+        let pausedTime = 0;              // 일시정지된 시간
+        let animationFrameId = null;     // requestAnimationFrame ID
+
+        // DOM 요소 선택
+        const timeDisplay = document.getElementById('time-display');
+        const toggleBtn = document.getElementById('toggle-btn');
+        const resetBtn = document.getElementById('reset-btn');
+        const statusText = document.getElementById('status-text');
+
+        // 밀리초를 MM:SS:MS 형식으로 변환하는 함수
+        function formatTime(ms) {
+            const totalSeconds = Math.floor(ms / 1000);
+            const hours = Math.floor(totalSeconds / 3600);
+            const minutes = Math.floor((totalSeconds % 3600) / 60);
+            const seconds = totalSeconds % 60;
+
+            // 두 자리 숫자로 포맷팅 (예: 5 → 05)
+            return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        }
+
+        // 화면 업데이트 함수
+        function updateDisplay() {
+            timeDisplay.textContent = formatTime(elapsedTime);
+        }
+
+        // 스톱워치 실행 함수 (재귀적으로 호출)
+        function tick() {
+            const currentTime = performance.now();
+            elapsedTime = pausedTime + (currentTime - startTime);
+            updateDisplay();
+            animationFrameId = requestAnimationFrame(tick);
+        }
+
+        // 시작/일시정지 토글 함수
+        function toggleStopwatch() {
+            if (isRunning) {
+                // 일시정지 상태로 전환
+                isRunning = false;
+                pausedTime = elapsedTime;
+                cancelAnimationFrame(animationFrameId);
+                toggleBtn.textContent = '시작';
+                statusText.textContent = '일시정지 중';
+            } else {
+                // 시작 상태로 전환
+                isRunning = true;
+                startTime = performance.now();
+                toggleBtn.textContent = '일시정지';
+                statusText.textContent = '실행 중';
+                tick();  // 업데이트 루프 시작
+            }
+        }
+
+        // 리셋 함수
+        function resetStopwatch() {
+            isRunning = false;
+            elapsedTime = 0;
+            pausedTime = 0;
+            startTime = 0;
+            cancelAnimationFrame(animationFrameId);
+            updateDisplay();
+            toggleBtn.textContent = '시작';
+            statusText.textContent = '준비 완료';
+        }
+
+        // 이벤트 리스너 등록
+        toggleBtn.addEventListener('click', toggleStopwatch);
+        resetBtn.addEventListener('click', resetStopwatch);
+
+        // 초기 화면 설정
+        updateDisplay();
+    </script>
+</body>
+</html>

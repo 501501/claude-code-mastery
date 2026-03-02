@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>할 일 목록 앱</title>
+    <!-- Tailwind CSS를 CDN에서 불러옵니다 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+    <!-- 전체 페이지를 중앙에 배치하는 컨테이너 -->
+    <div class="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50 py-8 px-4">
+
+        <!-- 할 일 목록 앱의 메인 카드 -->
+        <div class="max-w-2xl mx-auto">
+            <div class="bg-white rounded-lg shadow-lg p-6">
+
+                <!-- 제목 -->
+                <h1 class="text-3xl font-bold text-gray-800 mb-2">
+                    📝 할 일 목록
+                </h1>
+                <p class="text-gray-500 mb-6">오늘 해야 할 일들을 정리해보세요</p>
+
+                <!-- 입력 섹션: 할 일을 입력받는 부분 -->
+                <div class="flex gap-2 mb-6">
+                    <!-- 할 일 입력 필드 -->
+                    <input
+                        type="text"
+                        id="todo-input"
+                        placeholder="새로운 할 일을 입력하세요..."
+                        class="flex-1 px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:outline-none transition"
+                    >
+                    <!-- 추가 버튼 -->
+                    <button
+                        id="add-btn"
+                        class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-6 rounded-lg transition duration-200 transform hover:scale-105"
+                    >
+                        추가
+                    </button>
+                </div>
+
+                <!-- 할 일 목록을 표시하는 영역 -->
+                <div id="todo-list" class="space-y-2">
+                    <!-- JavaScript에서 할 일 항목들이 여기에 추가됩니다 -->
+                </div>
+
+                <!-- 할 일이 없을 때 표시되는 메시지 -->
+                <div
+                    id="empty-message"
+                    class="text-center py-8 text-gray-400"
+                >
+                    아직 할 일이 없습니다. 첫 번째 할 일을 추가해보세요! 🎯
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // HTML에서 필요한 요소들을 찾아서 저장합니다
+        const todoInput = document.getElementById('todo-input');
+        const addBtn = document.getElementById('add-btn');
+        const todoList = document.getElementById('todo-list');
+        const emptyMessage = document.getElementById('empty-message');
+
+        // 할 일 목록을 저장하는 배열
+        // 각 항목은 { id, text, completed } 형태의 객체입니다
+        let todos = [];
+        let nextId = 1;  // 새로운 할 일에 부여할 ID
+
+        // 할 일 목록을 화면에 표시하는 함수
+        function renderTodos() {
+            // todoList의 내용을 모두 비웁니다
+            todoList.innerHTML = '';
+
+            // todos 배열의 각 항목에 대해 HTML을 만듭니다
+            todos.forEach(todo => {
+                // 할 일 하나를 나타내는 div 요소를 만듭니다
+                const todoItem = document.createElement('div');
+                todoItem.className = 'bg-gray-50 rounded-lg p-4 flex items-center gap-3 hover:bg-gray-100 transition';
+
+                // 체크박스를 클릭했을 때 줄이 그어지는 효과를 위해
+                // 체크 상태에 따라 다른 스타일을 적용합니다
+                const isCompleted = todo.completed;
+
+                todoItem.innerHTML = `
+                    <!-- 체크박스 -->
+                    <input
+                        type="checkbox"
+                        ${isCompleted ? 'checked' : ''}
+                        class="w-5 h-5 text-purple-600 rounded cursor-pointer"
+                        onchange="toggleTodo(${todo.id})"
+                    >
+                    <!-- 할 일 텍스트 -->
+                    <!-- 줄이 그어지는 효과: 체크되면 line-through 클래스가 적용됩니다 -->
+                    <span class="flex-1 text-gray-800 ${isCompleted ? 'line-through text-gray-400' : ''}">
+                        ${todo.text}
+                    </span>
+                    <!-- 삭제 버튼 -->
+                    <button
+                        class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm transition"
+                        onclick="deleteTodo(${todo.id})"
+                    >
+                        삭제
+                    </button>
+                `;
+
+                todoList.appendChild(todoItem);
+            });
+
+            // 할 일이 없으면 "비었습니다" 메시지를 표시합니다
+            // 할 일이 있으면 메시지를 숨깁니다
+            if (todos.length === 0) {
+                emptyMessage.classList.remove('hidden');
+            } else {
+                emptyMessage.classList.add('hidden');
+            }
+        }
+
+        // 새로운 할 일을 추가하는 함수
+        function addTodo() {
+            // 입력값을 가져옵니다
+            const text = todoInput.value.trim();
+
+            // 입력값이 비어있으면 함수를 종료합니다
+            if (text === '') {
+                alert('할 일을 입력해주세요!');
+                return;
+            }
+
+            // 새로운 할 일 객체를 만들어서 todos 배열에 추가합니다
+            todos.push({
+                id: nextId,      // 고유한 ID를 부여합니다
+                text: text,      // 사용자가 입력한 텍스트
+                completed: false // 처음에는 완료되지 않은 상태
+            });
+
+            nextId++;  // 다음 할 일을 위해 ID를 증가시킵니다
+
+            // 입력 필드를 비웁니다
+            todoInput.value = '';
+
+            // 화면을 업데이트합니다
+            renderTodos();
+
+            // 입력 필드에 포커스를 맞춥니다 (계속 입력할 수 있도록)
+            todoInput.focus();
+        }
+
+        // 할 일의 완료 상태를 토글(바꾸는)하는 함수
+        function toggleTodo(id) {
+            // 해당 ID를 가진 할 일을 찾습니다
+            const todo = todos.find(t => t.id === id);
+
+            // 찾은 할 일의 completed 상태를 반대로 바꿉니다
+            if (todo) {
+                todo.completed = !todo.completed;
+                renderTodos();  // 화면을 업데이트합니다
+            }
+        }
+
+        // 할 일을 삭제하는 함수
+        function deleteTodo(id) {
+            // ID가 일치하지 않는 항목만 남깁니다 (즉, 해당 항목을 제거합니다)
+            todos = todos.filter(t => t.id !== id);
+            renderTodos();  // 화면을 업데이트합니다
+        }
+
+        // 추가 버튼을 클릭했을 때 addTodo 함수를 실행합니다
+        addBtn.addEventListener('click', addTodo);
+
+        // Enter 키를 눌렀을 때도 할 일을 추가할 수 있도록 합니다
+        // 이렇게 하면 마우스로 버튼을 클릭하지 않아도 됩니다
+        todoInput.addEventListener('keypress', function(event) {
+            // keyCode 13은 Enter 키입니다
+            if (event.key === 'Enter') {
+                addTodo();
+            }
+        });
+
+        // 처음 화면을 로드했을 때 renderTodos를 실행합니다
+        renderTodos();
+    </script>
+</body>
+</html>
